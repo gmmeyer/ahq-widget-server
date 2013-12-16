@@ -1,0 +1,14 @@
+{
+  "name": "ahq-widget-server",
+  "version": "0.0.1",
+  "dependencies": {
+    "coffee-script": "",
+    "express": "3",
+    "snockets": "",
+    "chokidar": "",
+    "jade": "",
+    "stylus": "",
+    "nib": "",
+    "clean-css": ""
+  }
+}
