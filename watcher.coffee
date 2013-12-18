@@ -73,10 +73,11 @@ exports.init = (app) ->
       generate(widget)
 
     chokidar.watch(widgets_path, { persistent: true }).on("change", (path) ->
+      console.log path
       _widget = path.split("\\")[path.split("\\").indexOf("widgets")+1]
       isWidget = widgets.indexOf(_widget) isnt -1
 
-      generate(widget) if isWidget
+      generate(_widget) if isWidget
     )
     # assume 404 since no middleware responded
     # Must come after all other routes being set
