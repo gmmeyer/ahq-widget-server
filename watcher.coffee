@@ -69,9 +69,14 @@ exports.init = (app) ->
         console.log "[#{ widget }] Running server.coffee"
         require("#{ widgets_path }#{ widget }/server.coffee")(app)
 
-      chokidar.watch(widgets_path + widget, { persistent: true }).on("change", -> generate(widget))
       generate(widget)
 
+    chokidar.watch(widgets_path, { persistent: true }).on("change", (path) ->
+      _widget = path.split("\\")[path.split("\\").indexOf("widgets")+1]
+      isWidget = widgets.indexOf(_widget) isnt -1
+
+      generate(widget) if isWidget
+    )
     # assume 404 since no middleware responded
     # Must come after all other routes being set
     app.use (req, res, next) ->
