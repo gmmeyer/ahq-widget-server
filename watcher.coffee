@@ -40,6 +40,7 @@ generate = (widget) ->
     html = jade.renderFile "#{ _path }/widget.jade", {
       js: js
       css: css
+      NODE_ENV: config.server.env
     }
   else
     console.log "#{_w} No HTML"
