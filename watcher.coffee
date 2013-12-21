@@ -2,6 +2,7 @@ snockets        = new (require "snockets")
 config          = require "./config"
 fs              = require "fs"
 wrench          = require "wrench"
+rimraf          = require "rimraf"
 chokidar        = require "chokidar"
 jade            = require "jade"
 stylus          = require "stylus"
@@ -64,32 +65,37 @@ generate = (widget) ->
   console.log "==="
 
 exports.init = (app) ->
-  widgets = []
-  fs.readdir widgets_path, (err, files) ->
+  console.log "Deleting ./output folder"
+  rimraf "#{ config.paths.root }/output/", (err) ->
     if err then return console.log err
+    fs.mkdirSync "#{ config.paths.root }/output/"
 
-    for file in files
-      if fs.statSync(widgets_path + file).isDirectory()
-        widgets.push(file)
+    widgets = []
+    fs.readdir widgets_path, (err, files) ->
+      if err then return console.log err
 
-    for i, widget of widgets
-      # Run the widget's server-side code if present
-      if fs.existsSync("#{ widgets_path }#{ widget }/server.coffee")
-        console.log "[#{ widget }] Running server.coffee"
-        require("#{ widgets_path }#{ widget }/server.coffee")(app)
+      for file in files
+        if fs.statSync(widgets_path + file).isDirectory()
+          widgets.push(file)
 
-      generate(widget)
+      for i, widget of widgets
+        # Run the widget's server-side code if present
+        if fs.existsSync("#{ widgets_path }#{ widget }/server.coffee")
+          console.log "[#{ widget }] Running server.coffee"
+          require("#{ widgets_path }#{ widget }/server.coffee")(app)
 
-    chokidar.watch(widgets_path, { persistent: true }).on("change", (path) ->
-      _widget = path.split("\\")[path.split("\\").indexOf("widgets")+1]
-      isWidget = widgets.indexOf(_widget) isnt -1
+        generate(widget)
 
-      generate(_widget) if isWidget
-    )
-    # assume 404 since no middleware responded
-    # Must come after all other routes being set
-    app.use (req, res, next) ->
-      res.status(404).jsonp {
-        error:
-          404: "Not Found"
-      }
+      chokidar.watch(widgets_path, { persistent: true }).on("change", (path) ->
+        _widget = path.split("\\")[path.split("\\").indexOf("widgets")+1]
+        isWidget = widgets.indexOf(_widget) isnt -1
+
+        generate(_widget) if isWidget
+      )
+      # assume 404 since no middleware responded
+      # Must come after all other routes being set
+      app.use (req, res, next) ->
+        res.status(404).jsonp {
+          error:
+            404: "Not Found"
+        }

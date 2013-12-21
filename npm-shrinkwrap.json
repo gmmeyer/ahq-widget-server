@@ -409,6 +409,11 @@
       "version": "1.5.4",
       "from": "wrench@",
       "resolved": "https://registry.npmjs.org/wrench/-/wrench-1.5.4.tgz"
+    },
+    "rimraf": {
+      "version": "2.2.5",
+      "from": "rimraf@",
+      "resolved": "https://registry.npmjs.org/rimraf/-/rimraf-2.2.5.tgz"
     }
   }
 }

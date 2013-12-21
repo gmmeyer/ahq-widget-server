@@ -10,6 +10,7 @@
     "stylus": "",
     "nib": "",
     "clean-css": "",
-    "wrench": ""
+    "wrench": "",
+    "rimraf": ""
   }
 }
