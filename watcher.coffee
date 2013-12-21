@@ -1,6 +1,7 @@
 snockets        = new (require "snockets")
 config          = require "./config"
 fs              = require "fs"
+wrench          = require "wrench"
 chokidar        = require "chokidar"
 jade            = require "jade"
 stylus          = require "stylus"
@@ -52,6 +53,13 @@ generate = (widget) ->
     fs.writeFileSync(config.paths.root + "/output/" + widget + ".html", html)
   else
     console.log "#{_w} Nothing to save"
+
+
+  if fs.existsSync("#{ _path }/assets") and fs.lstatSync("#{ _path }/assets").isDirectory()
+    console.log "#{_w} Copying Assets to ./output"
+    wrench.copyDirSyncRecursive("#{ _path }/assets", config.paths.root + "/output/" + widget)
+  else
+    console.log "#{_w} No assets to copy to ./output"
 
   console.log "==="
 
