@@ -28,7 +28,14 @@ generate = (widget) ->
   if fs.existsSync("#{ _path }/widget.styl")
     console.log "#{_w} Generating and minifying CSS"
     css = null;
-    stylus(fs.readFileSync("#{ _path }/widget.styl").toString()).use(nib()).set("compress", true).render((err, _css) ->
+    stylus(
+      fs.readFileSync("#{ _path }/widget.styl")
+      .toString()
+    ).use(nib())
+    .set("include css", true)
+    .set('filename', "#{ _path }/widget.styl")
+    .set("compress", true)
+    .render((err, _css) ->
       if err
         console.error err
       css = new CleanCSS().minify(_css)
