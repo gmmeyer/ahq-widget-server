@@ -1,4 +1,4 @@
-require("coffee-script");
+require("coffee-script/register");
 var
   config        = require("./config"),
   app           = require("./express")(),
